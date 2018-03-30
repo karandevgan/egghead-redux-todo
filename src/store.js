@@ -1,7 +1,9 @@
 import { createStore } from 'redux';
-import todos from './modules/todos';
+import todo from './modules/todos';
+import todoApp from './modules/todo-app';
 
-const store = createStore(todos);
+
+const store = createStore(todoApp);
 
 
 export default store;
