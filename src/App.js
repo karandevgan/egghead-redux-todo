@@ -8,7 +8,6 @@ class App extends Component {
     return (
       <div>
         <TodoApp
-          todos={store.getState().todos}
           visibilityFilter={store.getState().visibilityFilter}
         />
       </div>

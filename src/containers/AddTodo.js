@@ -1,8 +1,19 @@
 import React from 'react';
+import store from '../store';
 
-const AddTodo = ({
-    onAddClick
-}) => {
+let nextToDoId = 0;
+
+const addTodoClickHandler = (value) => {
+    if (value) {
+        store.dispatch({
+            type: 'ADD_TODO',
+            text: value,
+            id: nextToDoId++
+        });
+    }
+};
+
+const AddTodo = () => {
     let input;
     return (
         <div>
@@ -14,7 +25,7 @@ const AddTodo = ({
             />
             <button
                 onClick={() => {
-                    onAddClick(input.value);
+                    addTodoClickHandler(input.value);
                     input.value = '';
                 }}
             >
