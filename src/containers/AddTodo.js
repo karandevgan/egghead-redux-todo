@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 let nextToDoId = 0;
 
-const addTodoClickHandler = (store, value) => {
+const addTodoClick = (dispatch, value) => {
     if (value) {
-        store.dispatch({
+        dispatch({
             type: 'ADD_TODO',
             text: value,
             id: nextToDoId++
@@ -13,7 +13,7 @@ const addTodoClickHandler = (store, value) => {
     }
 };
 
-const AddTodo = (props, { store }) => {
+let AddTodo = ({ dispatch }) => {
     let input;
     return (
         <div>
@@ -25,7 +25,7 @@ const AddTodo = (props, { store }) => {
             />
             <button
                 onClick={() => {
-                    addTodoClickHandler(store, input.value);
+                    addTodoClick(dispatch, input.value)
                     input.value = '';
                 }}
             >
@@ -35,8 +35,6 @@ const AddTodo = (props, { store }) => {
     );
 };
 
-AddTodo.contextTypes = {
-    store: PropTypes.object
-};
+AddTodo = connect()(AddTodo);
 
 export default AddTodo;

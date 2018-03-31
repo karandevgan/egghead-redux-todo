@@ -1,59 +1,38 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import TodoList from '../presentation/TodoList';
 
-class VisibleTodoList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.getVisibleTodos = this.getVisibleTodos.bind(this);
-        this.onToggleTodoClick = this.onToggleTodoClick.bind(this);
+const getVisibleTodos = (todos, filter) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_COMPLETED':
+            return todos.filter((t) => t.completed);
+        case 'SHOW_ACTIVE':
+            return todos.filter((t) => !t.completed);
+        default:
+            return todos;
     }
-
-    componentDidMount() {
-        const { store } = this.context;
-        this.unsubscribe = store.subscribe(() => this.forceUpdate());
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-
-    onToggleTodoClick(id) {
-        const { store } = this.context;
-        store.dispatch({
-            type: 'TOGGLE_TODO',
-            id
-        });
-    }
-
-    getVisibleTodos = (todos, filter) => {
-        switch (filter) {
-            case 'SHOW_ALL':
-                return todos;
-            case 'SHOW_COMPLETED':
-                return todos.filter((t) => t.completed);
-            case 'SHOW_ACTIVE':
-                return todos.filter((t) => !t.completed);
-            default:
-                return todos;
-        }
-    }
-
-    render() {
-        const { store } = this.context;
-        const state = store.getState();
-        return (
-            <TodoList
-                todos={this.getVisibleTodos(state.todos, state.visibilityFilter)}
-                onTodoClick={this.onToggleTodoClick}
-            />
-        );
-    }
-}
-
-VisibleTodoList.contextTypes = {
-    store: PropTypes.object
 };
+
+const onTodoClick = (dispatch, id) => {
+    dispatch({
+        type: 'TOGGLE_TODO',
+        id
+    });
+};
+
+const mapStateToProps = (state) => {
+    return {
+        todos: getVisibleTodos(state.todos, state.visibilityFilter)
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onTodoClick: (id) => onTodoClick(dispatch, id)
+    };
+};
+
+const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(TodoList);
 
 export default VisibleTodoList;
