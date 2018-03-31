@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import TodoApp from './containers/TodoApp';
+import TodoApp from './presentation/TodoApp';
+import { Provider } from 'react-redux';
 import store from './store';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <TodoApp
-          visibilityFilter={store.getState().visibilityFilter}
-        />
-      </div>
+      <Provider store={store}>
+        <TodoApp />
+      </Provider>
     );
   }
 }

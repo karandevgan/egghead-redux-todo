@@ -1,9 +1,9 @@
 import React from 'react';
-import store from '../store';
+import PropTypes from 'prop-types';
 
 let nextToDoId = 0;
 
-const addTodoClickHandler = (value) => {
+const addTodoClickHandler = (store, value) => {
     if (value) {
         store.dispatch({
             type: 'ADD_TODO',
@@ -13,7 +13,7 @@ const addTodoClickHandler = (value) => {
     }
 };
 
-const AddTodo = () => {
+const AddTodo = (props, { store }) => {
     let input;
     return (
         <div>
@@ -25,7 +25,7 @@ const AddTodo = () => {
             />
             <button
                 onClick={() => {
-                    addTodoClickHandler(input.value);
+                    addTodoClickHandler(store, input.value);
                     input.value = '';
                 }}
             >
@@ -33,6 +33,10 @@ const AddTodo = () => {
             </button>
         </div>
     );
+};
+
+AddTodo.contextTypes = {
+    store: PropTypes.object
 };
 
 export default AddTodo;

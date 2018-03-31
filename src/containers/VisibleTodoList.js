@@ -1,6 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import TodoList from '../presentation/TodoList';
-import store from '../store';
 
 class VisibleTodoList extends React.Component {
     constructor(props) {
@@ -10,6 +10,7 @@ class VisibleTodoList extends React.Component {
     }
 
     componentDidMount() {
+        const { store } = this.context;
         this.unsubscribe = store.subscribe(() => this.forceUpdate());
     }
 
@@ -19,6 +20,7 @@ class VisibleTodoList extends React.Component {
 
 
     onToggleTodoClick(id) {
+        const { store } = this.context;
         store.dispatch({
             type: 'TOGGLE_TODO',
             id
@@ -39,6 +41,7 @@ class VisibleTodoList extends React.Component {
     }
 
     render() {
+        const { store } = this.context;
         const state = store.getState();
         return (
             <TodoList
@@ -48,5 +51,9 @@ class VisibleTodoList extends React.Component {
         );
     }
 }
+
+VisibleTodoList.contextTypes = {
+    store: PropTypes.object
+};
 
 export default VisibleTodoList;
