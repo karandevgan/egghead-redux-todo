@@ -1,7 +1,21 @@
 import React, { PureComponent } from 'react';
+import FilterLink from './FilterLink';
 import store from '../store';
 
 let nextToDoId = 0;
+
+const getVisibleTodos = (todos, filter) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_COMPLETED':
+            return todos.filter((t) => t.completed);
+        case 'SHOW_ACTIVE':
+            return todos.filter((t) => !t.completed);
+        default:
+            return todos;
+    }
+}
 
 export default class TodoApp extends PureComponent {
 
@@ -30,6 +44,7 @@ export default class TodoApp extends PureComponent {
     }
 
     render() {
+        const visibleTodos = getVisibleTodos(this.props.todos, this.props.visibilityFilter);
         return (
             <div>
                 <input
@@ -43,7 +58,7 @@ export default class TodoApp extends PureComponent {
                 </button>
                 <ul>
                     {
-                        this.props.todos.map((todo) => {
+                        visibleTodos.map((todo) => {
                             return (
                                 <li
                                     key={todo.id}
@@ -61,6 +76,27 @@ export default class TodoApp extends PureComponent {
                         })
                     }
                 </ul>
+                <p>
+                    Show:
+                    {' '}
+                    <FilterLink
+                        filter="SHOW_ALL"
+                    >
+                        All
+                    </FilterLink>
+                    {' '}
+                    <FilterLink
+                        filter="SHOW_ACTIVE"
+                    >
+                        Active
+                    </FilterLink>
+                    {' '}
+                    <FilterLink
+                        filter="SHOW_COMPLETED"
+                    >
+                        Completed
+                    </FilterLink>
+                </p>
             </div>
         );
     }
