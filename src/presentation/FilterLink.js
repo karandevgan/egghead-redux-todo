@@ -1,15 +1,11 @@
 import React from 'react';
-import store from '../store';
 
-const filterLinkClickHandler = (e, filter) => {
-    e.preventDefault();
-    store.dispatch({
-        type: 'SET_VISIBILITY_FILTER',
-        filter
-    });
-};
-
-const FilterLink = ({ filter, currentFilter, children }) => {
+const FilterLink = ({
+    filter,
+    currentFilter,
+    filterLinkClick,
+    children
+}) => {
     if (currentFilter === filter) {
         return (
             <span>{children}</span>
@@ -19,7 +15,8 @@ const FilterLink = ({ filter, currentFilter, children }) => {
             <a
                 href="#"
                 onClick={(e) => {
-                    filterLinkClickHandler(e, filter);
+                    e.preventDefault();
+                    filterLinkClick(filter);
                 }}
             >
                 {children}

@@ -1,21 +1,10 @@
 import React, { PureComponent } from 'react';
-import FilterLink from './FilterLink';
+import AddTodo from '../presentation/AddTodo';
+import TodoList from '../presentation/TodoList';
+import Footer from '../presentation/Footer';
 import store from '../store';
 
 let nextToDoId = 0;
-
-const getVisibleTodos = (todos, filter) => {
-    switch (filter) {
-        case 'SHOW_ALL':
-            return todos;
-        case 'SHOW_COMPLETED':
-            return todos.filter((t) => t.completed);
-        case 'SHOW_ACTIVE':
-            return todos.filter((t) => !t.completed);
-        default:
-            return todos;
-    }
-}
 
 export default class TodoApp extends PureComponent {
 
@@ -23,85 +12,64 @@ export default class TodoApp extends PureComponent {
         super(props);
         this.addTodoClickHandler = this.addTodoClickHandler.bind(this);
         this.toggleTodoClickHandler = this.toggleTodoClickHandler.bind(this);
-    }
+        this.getVisibleTodos = this.getVisibleTodos.bind(this);
+        this.filterLinkClickHandler = this.filterLinkClickHandler.bind(this);
+    };
 
-    addTodoClickHandler() {
-        if (this.input.value) {
+    getVisibleTodos = (todos, filter) => {
+        switch (filter) {
+            case 'SHOW_ALL':
+                return todos;
+            case 'SHOW_COMPLETED':
+                return todos.filter((t) => t.completed);
+            case 'SHOW_ACTIVE':
+                return todos.filter((t) => !t.completed);
+            default:
+                return todos;
+        }
+    };
+
+    filterLinkClickHandler = (filter) => {
+        store.dispatch({
+            type: 'SET_VISIBILITY_FILTER',
+            filter
+        });
+    };
+
+    addTodoClickHandler(value) {
+        if (value) {
             store.dispatch({
                 type: 'ADD_TODO',
-                text: this.input.value,
+                text: value,
                 id: nextToDoId++
             });
-            this.input.value = '';
         }
-    }
+    };
 
     toggleTodoClickHandler(id) {
         store.dispatch({
             type: 'TOGGLE_TODO',
             id
         });
-    }
+    };
 
     render() {
         const { todos, visibilityFilter } = this.props;
-        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
+        const visibleTodos = this.getVisibleTodos(todos, visibilityFilter);
         return (
             <div>
-                <input
-                    type="text"
-                    ref={node => {
-                        this.input = node;
-                    }}
+                <AddTodo
+                    onAddClick={this.addTodoClickHandler}
                 />
-                <button onClick={() => { this.addTodoClickHandler(); }}>
-                    Add Todo
-                </button>
-                <ul>
-                    {
-                        visibleTodos.map((todo) => {
-                            return (
-                                <li
-                                    key={todo.id}
-                                    onClick={() => { this.toggleTodoClickHandler(todo.id); }}
-                                    style={{
-                                        textDecoration: todo.completed ?
-                                            'line-through' :
-                                            'none',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {todo.text}
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-                <p>
-                    Show:
-                    {' '}
-                    <FilterLink
-                        filter="SHOW_ALL"
-                        currentFilter={visibilityFilter}
-                    >
-                        All
-                    </FilterLink>
-                    {' '}
-                    <FilterLink
-                        filter="SHOW_ACTIVE"
-                        currentFilter={visibilityFilter}
-                    >
-                        Active
-                    </FilterLink>
-                    {' '}
-                    <FilterLink
-                        filter="SHOW_COMPLETED"
-                        currentFilter={visibilityFilter}
-                    >
-                        Completed
-                    </FilterLink>
-                </p>
-            </div>
+                <TodoList
+                    todos={visibleTodos}
+                    onTodoClick={this.toggleTodoClickHandler}
+                />
+                <Footer
+                    visibilityFilter={visibilityFilter}
+                    filterLinkClick={this.filterLinkClickHandler}
+                />
+            </div >
         );
-    }
+    };
 }
