@@ -9,17 +9,23 @@ const filterLinkClickHandler = (e, filter) => {
     });
 };
 
-const FilterLink = ({ filter, children }) => {
-    return (
-        <a
-            href="#"
-            onClick={(e) => {
-                filterLinkClickHandler(e, filter);
-            }}
-        >
-            {children}
-        </a>
-    );
+const FilterLink = ({ filter, currentFilter, children }) => {
+    if (currentFilter === filter) {
+        return (
+            <span>{children}</span>
+        );
+    } else {
+        return (
+            <a
+                href="#"
+                onClick={(e) => {
+                    filterLinkClickHandler(e, filter);
+                }}
+            >
+                {children}
+            </a>
+        );
+    }
 };
 
 export default FilterLink;

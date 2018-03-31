@@ -44,7 +44,8 @@ export default class TodoApp extends PureComponent {
     }
 
     render() {
-        const visibleTodos = getVisibleTodos(this.props.todos, this.props.visibilityFilter);
+        const { todos, visibilityFilter } = this.props;
+        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
         return (
             <div>
                 <input
@@ -81,18 +82,21 @@ export default class TodoApp extends PureComponent {
                     {' '}
                     <FilterLink
                         filter="SHOW_ALL"
+                        currentFilter={visibilityFilter}
                     >
                         All
                     </FilterLink>
                     {' '}
                     <FilterLink
                         filter="SHOW_ACTIVE"
+                        currentFilter={visibilityFilter}
                     >
                         Active
                     </FilterLink>
                     {' '}
                     <FilterLink
                         filter="SHOW_COMPLETED"
+                        currentFilter={visibilityFilter}
                     >
                         Completed
                     </FilterLink>
