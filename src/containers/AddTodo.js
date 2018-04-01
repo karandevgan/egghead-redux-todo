@@ -1,15 +1,12 @@
 import React from 'react';
+import addTodo from '../actions/addTodo';
 import { connect } from 'react-redux';
 
 let nextToDoId = 0;
 
 const addTodoClick = (dispatch, value) => {
     if (value) {
-        dispatch({
-            type: 'ADD_TODO',
-            text: value,
-            id: nextToDoId++
-        });
+        dispatch(addTodo(value));
     }
 };
 
