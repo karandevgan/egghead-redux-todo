@@ -5,6 +5,13 @@ const TodoList = ({
     todos,
     onTodoClick
 }) => {
+    if (!todos.length) {
+        return (
+            <div>
+                No Todo
+            </div>
+        );
+    }
     return (
         <ul>
             {
